@@ -1,11 +1,13 @@
 package com.lunchee.fizzbuzz.game
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
@@ -28,16 +30,24 @@ open class FizzBuzzGameControllerIT {
 
     @Test
     fun `should return answers as array of strings`() {
-        given(game.play(CountToNumber(5))).willReturn(flowOf("1", "2", "Fizz", "4", "Buzz"))
+        given(game.play(CountToNumber(5))).willReturn(answers("1", "2", "Fizz", "4", "Buzz"))
 
-        val response: Flux<String> = testClient
+        val response: Flux<Answer> = testClient
             .get().uri("/game?countTo=5").accept(APPLICATION_STREAM_JSON).exchange()
             .expectStatus().isOk
-            .returnResult(String::class.java).responseBody
+            .returnResult(Answer::class.java)
+            .responseBody
 
         StepVerifier.create(response)
-            .expectNext("1", "2", "Fizz", "4", "Buzz")
+            .expectNext(Answer("1"), Answer("2"), Answer("Fizz"), Answer("4"), Answer("Buzz"))
             .expectComplete()
+            .verify()
+    }
+
+    private fun answers(vararg answers: String): Flow<Answer> {
+        return answers.asSequence()
+            .map { Answer(it) }
+            .asFlow()
     }
 
     @Test

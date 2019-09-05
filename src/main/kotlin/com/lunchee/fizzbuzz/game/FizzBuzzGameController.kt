@@ -14,7 +14,7 @@ class FizzBuzzGameController(private val game: FizzBuzzGame) {
 
     @ExperimentalCoroutinesApi
     @GetMapping
-    fun play(@RequestParam countTo: Int): Flux<String> {
+    fun play(@RequestParam countTo: Int): Flux<Answer> {
         return game.play(CountToNumber(countTo)).asFlux()
     }
 }

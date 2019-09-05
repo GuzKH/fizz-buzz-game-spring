@@ -22,21 +22,21 @@ class FizzBuzzGameTest {
 
     @Test
     fun `should return one value if counting to 1`() {
-        given(player.giveAnswer(1)).willReturn("One?")
+        given(player.giveAnswer(1)).willReturn(Answer("One?"))
 
         runBlocking {
             assertThat(game().play(CountToNumber(1)).toList())
-                .containsExactly("One?")
+                .containsExactly(Answer("One?"))
         }
     }
 
     @Test
     fun `should return two values if counting to 2`() {
-        given(player.giveAnswer(anyInt())).willAnswer { it.arguments[0].toString() }
+        given(player.giveAnswer(anyInt())).willAnswer { Answer(it.arguments[0].toString()) }
 
         runBlocking {
             assertThat(game().play(CountToNumber(2)).toList())
-                .containsExactly("1", "2")
+                .containsExactly(Answer("1"), Answer("2"))
         }
     }
 }
