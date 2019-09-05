@@ -1,4 +1,4 @@
-package com.lunchee.fizzbuzz
+package com.lunchee.fizzbuzz.configuration.controller
 
 import org.springframework.http.HttpStatus
 
