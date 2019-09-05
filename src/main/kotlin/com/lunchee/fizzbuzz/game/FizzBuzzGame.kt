@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class FizzBuzzGame(private val player: FizzBuzzPlayer) {
 
     @ExperimentalCoroutinesApi
-    fun play(untilNumber: CountToNumber): Flow<String> {
+    fun play(untilNumber: CountToNumber): Flow<Answer> {
         return (1..untilNumber.value).asFlow()
             .map { player.giveAnswer(it) }
     }
