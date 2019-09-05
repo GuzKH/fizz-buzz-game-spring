@@ -1,0 +1,4 @@
+spring.test.restdocs:
+  uriScheme: https
+  uriHost: ${BASE_URL}
+  uriPort: ${PORT}
