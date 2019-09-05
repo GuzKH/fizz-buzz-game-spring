@@ -8,7 +8,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-class FizzbuzzBackendApplicationIT {
+class FizzBuzzBackendApplicationIT {
 
 	@Test
 	fun contextLoads() {

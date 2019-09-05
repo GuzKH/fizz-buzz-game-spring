@@ -3,7 +3,7 @@ package com.lunchee.fizzbuzz.game
 import org.springframework.stereotype.Service
 
 @Service
-class FizzBuzzPlayer {
+class Player {
     fun giveAnswer(number: Int): Answer {
         val answers = arrayListOf<String>()
 

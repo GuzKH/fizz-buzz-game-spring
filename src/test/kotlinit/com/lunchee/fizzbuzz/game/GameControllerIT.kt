@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
@@ -18,15 +17,15 @@ import reactor.core.publisher.Flux
 import reactor.test.StepVerifier
 
 @ExperimentalCoroutinesApi
-@WebFluxTest(controllers = [FizzBuzzGameController::class])
+@WebFluxTest(controllers = [GameController::class])
 @ExtendWith(SpringExtension::class)
-open class FizzBuzzGameControllerIT {
+open class GameControllerIT {
 
     @Autowired
     private lateinit var testClient: WebTestClient
 
     @MockBean
-    private lateinit var game: FizzBuzzGame
+    private lateinit var game: Game
 
     @Test
     fun `should return answers as array of strings`() {
