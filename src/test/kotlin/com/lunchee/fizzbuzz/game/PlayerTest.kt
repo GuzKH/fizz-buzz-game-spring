@@ -3,9 +3,9 @@ package com.lunchee.fizzbuzz.game
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class FizzBuzzPlayerTest {
+class PlayerTest {
 
-    private fun player() = FizzBuzzPlayer()
+    private fun player() = Player()
 
     @Test
     fun `should answer "1" for 1`() {

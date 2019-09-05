@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux
 
 @RestController
 @RequestMapping("/game")
-class FizzBuzzGameController(private val game: FizzBuzzGame) {
+class GameController(private val game: Game) {
 
     @ExperimentalCoroutinesApi
     @GetMapping

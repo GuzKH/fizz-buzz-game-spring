@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.map
 import org.springframework.stereotype.Service
 
 @Service
-class FizzBuzzGame(private val player: FizzBuzzPlayer) {
+class Game(private val player: Player) {
 
     @ExperimentalCoroutinesApi
     fun play(untilNumber: CountToNumber): Flow<Answer> {

@@ -13,12 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension
 
 @ExperimentalCoroutinesApi
 @ExtendWith(MockitoExtension::class)
-class FizzBuzzGameTest {
+class GameTest {
 
-    private fun game() = FizzBuzzGame(player)
+    private fun game() = Game(player)
 
     @Mock
-    private lateinit var player: FizzBuzzPlayer
+    private lateinit var player: Player
 
     @Test
     fun `should return one value if counting to 1`() {
