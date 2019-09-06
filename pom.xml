@@ -6,8 +6,8 @@
     <groupId>com.lunchee.fizzbuzz</groupId>
     <artifactId>fizzbuzz-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>fizzbuzz-backend</name>
-    <description>Fizz Buzz Game Backend</description>
+    <name>Fizz Buzz Game</name>
+    <description>Fizz Buzz Game with Spring WebFlux and Kotlin</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -168,18 +168,19 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.3</version>
+                <version>1.5.6</version>
+                <configuration>
+                    <backend>html5</backend>
+                    <doctype>book</doctype>
+                </configuration>
+
                 <executions>
                     <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
+                        <id>generate-docs-html</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
-                        <configuration>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
-                        </configuration>
                     </execution>
                 </executions>
                 <dependencies>

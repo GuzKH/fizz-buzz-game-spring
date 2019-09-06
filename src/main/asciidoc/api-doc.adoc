@@ -1,0 +1,40 @@
+= Fizz Buzz Game
+
+A Fizz Buzz game implemented with Spring WebFlux and Kotlin.
+
+== Playing a game
+
+A `GET` request with a number to count up to starts a game.
+include::{snippets}/game-start/curl-request.adoc[]
+include::{snippets}/game-start/request-parameters.adoc[]
+Response comes as a stream of JSON objects:
+include::{snippets}/game-start/response-body.adoc[]
+include::{snippets}/game-start/response-fields.adoc[]
+
+== HTTP Status Codes
+The following codes are used:
+|===
+| Status Code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `422 Unprocessable Entity`
+| Arguments of the request are not valid. E.g. `countTo` = -1
+
+| `400 Bad Request`
+| The request was malformed. E.g. a required argument was missing.
+
+| `404 Not Found`
+| The Resource was not found
+|===
+
+== Errors
+In case when a error is returned (response with status >= 4xx), the response body will contain a JSON
+object with information about the error. +
+E.g., if a client sends an invalid `countTo` parameter value:
+include::{snippets}/game-start-illegal-count/curl-request.adoc[]
+
+the following response is returned:
+include::{snippets}/game-start-illegal-count/http-response.adoc[]
+include::{snippets}/game-start-illegal-count/response-fields.adoc[]
