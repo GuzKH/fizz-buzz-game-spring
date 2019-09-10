@@ -39,6 +39,7 @@ open class GameControllerIT {
         testClient
             .get().uri("/game?countTo=5").accept(APPLICATION_STREAM_JSON).exchange()
             .expectStatus().isOk
+            .expectHeader().contentType("application/stream+json;charset=UTF-8")
             .expectBodyList(Answer::class.java)
             .hasSize(5)
             .contains(*answers("1", "2", "Fizz", "4", "Buzz"))
