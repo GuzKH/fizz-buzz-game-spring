@@ -2,9 +2,11 @@ package com.lunchee.fizzbuzz.game
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.toList
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -110,20 +112,28 @@ open class GameControllerIT {
 
     @Test
     fun `when requesting answers for multiple numbers, should return a stream of as much answers as was requested`() {
-        every { game.getAnswers(any()) } returns answersFlow("1", "Buzz", "Fizz", "10")
+        every {
+            game.getAnswers(numbers = capture(capturedNumbers))
+        } coAnswers {
+            capturedNumbers.captured.toList()
+            answersFlow("1", "Buzz", "Fizz", "10")
+        }
 
         testClient
             .post().uri("/game/answers")
+            .contentType(APPLICATION_STREAM_JSON)
             .body(fluxOfNumbersToAnswer(1, 5, 3, 10), NumberToAnswer::class.java)
             .accept(APPLICATION_STREAM_JSON)
             .exchange()
             .expectStatus().isOk
             .expectBodyList(Answer::class.java)
+            .hasSize(4)
+            .contains(*answers("1", "Buzz", "Fizz", "10"))
             .consumeWith<WebTestClient.ListBodySpec<Answer>>(
                 document(
                     "get-multiple-answers",
                     requestFields(
-                        fieldWithPath("[].value").description("Value of a number to answer")
+                        fieldWithPath("value").description("Value of a number to answer")
                     )
                 )
             )
@@ -133,4 +143,5 @@ open class GameControllerIT {
         return Flux.fromIterable(numbers.map { NumberToAnswer(it) })
     }
 
+    private val capturedNumbers = slot<Flow<Int>>()
 }

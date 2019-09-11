@@ -1,7 +1,7 @@
 package com.lunchee.fizzbuzz.game
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.asFlux
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
 import org.springframework.http.MediaType.APPLICATION_STREAM_JSON_VALUE
@@ -21,9 +21,10 @@ class GameController(private val game: Game) {
     @ExperimentalCoroutinesApi
     @PostMapping(
         path = ["/answers"],
+        consumes = [APPLICATION_STREAM_JSON_VALUE],
         produces = [APPLICATION_STREAM_JSON_VALUE]
     )
-    fun getAnswers(@RequestBody numbers: List<NumberToAnswer>): Flux<Answer> {
+    fun getAnswers(@RequestBody numbers: Flux<NumberToAnswer>): Flux<Answer> {
         return game.getAnswers(numbers.map { it.value }.asFlow()).asFlux()
     }
 

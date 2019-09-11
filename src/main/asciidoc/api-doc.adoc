@@ -10,7 +10,7 @@ The service returns answers from `1` to the provided number.
 include::{snippets}/game-start/curl-request.adoc[]
 include::{snippets}/game-start/request-parameters.adoc[]
 
-Response comes as a stream of JSON objects:
+Response is a stream of JSON objects:
 include::{snippets}/game-start/http-response.adoc[]
 include::{snippets}/game-start/response-fields.adoc[]
 
@@ -23,7 +23,7 @@ Response is a single answer:
 include::{snippets}/get-single-answer/http-response.adoc[]
 
 === Several Answers
-To get answers for several numbers, use the following request with numbers sent as an array in request body:
+To get answers for several numbers, use the following request with numbers sent as a stream in request body:
 include::{snippets}/get-multiple-answers/curl-request.adoc[]
 include::{snippets}/get-multiple-answers/request-fields.adoc[]
 
