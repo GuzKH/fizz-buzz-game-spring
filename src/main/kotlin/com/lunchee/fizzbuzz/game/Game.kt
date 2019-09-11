@@ -13,10 +13,19 @@ class Game(private val player: Player) {
 
     @ExperimentalCoroutinesApi
     fun play(untilNumber: CountToNumber): Flow<Answer> {
-        return (1..untilNumber.value).asFlow()
-            .map { player.giveAnswer(it) }
-            .onStart { log.debug("Game started") }
-            .onCompletion { log.debug("Game ended") }
+        return getAnswers((1..untilNumber.value).asFlow())
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getAnswers(numbers: Flow<Int>): Flow<Answer> {
+        return numbers
+            .map { getAnswer(it) }
+            .onStart { log.debug("Answering") }
+            .onCompletion { log.debug("Answered") }
             .flowOn(Dispatchers.Default)
+    }
+
+    fun getAnswer(number: Int): Answer {
+        return player.giveAnswer(number)
     }
 }

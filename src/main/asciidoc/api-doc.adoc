@@ -4,12 +4,31 @@ A Fizz Buzz game implemented with Spring WebFlux and Kotlin.
 
 == Playing a game
 
-A `GET` request with a number to count up to starts a game.
+=== Count up
+A `GET` request with a number to count up to starts a game. +
+The service returns answers from `1` to the provided number.
 include::{snippets}/game-start/curl-request.adoc[]
 include::{snippets}/game-start/request-parameters.adoc[]
+
 Response comes as a stream of JSON objects:
-include::{snippets}/game-start/response-body.adoc[]
+include::{snippets}/game-start/http-response.adoc[]
 include::{snippets}/game-start/response-fields.adoc[]
+
+=== Single Answer
+To get an answer for a single number, use the following request:
+include::{snippets}/get-single-answer/curl-request.adoc[]
+include::{snippets}/get-single-answer/path-parameters.adoc[]
+
+Response is a single answer:
+include::{snippets}/get-single-answer/http-response.adoc[]
+
+=== Several Answers
+To get answers for several numbers, use the following request with numbers sent as an array in request body:
+include::{snippets}/get-multiple-answers/curl-request.adoc[]
+include::{snippets}/get-multiple-answers/request-fields.adoc[]
+
+Response is a stream of Answers:
+include::{snippets}/get-multiple-answers/http-response.adoc[]
 
 == HTTP Status Codes
 The following codes are used:
