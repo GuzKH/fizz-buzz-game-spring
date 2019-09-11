@@ -18,4 +18,10 @@ class GameController(private val game: Game) {
     fun play(@RequestParam countTo: Int): Flux<Answer> {
         return game.play(CountToNumber(countTo)).asFlux()
     }
+
+    @ExperimentalCoroutinesApi
+    @GetMapping(path = ["/answers"], produces = [APPLICATION_STREAM_JSON_VALUE])
+    fun getAnswers(@RequestParam numbers: List<Int>): Flux<Answer> {
+        return Flux.empty()
+    }
 }

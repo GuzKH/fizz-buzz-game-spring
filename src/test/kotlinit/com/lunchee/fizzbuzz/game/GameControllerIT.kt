@@ -33,7 +33,7 @@ open class GameControllerIT {
     private lateinit var testClient: WebTestClient
 
     @Test
-    fun `should return answers as a stream`() {
+    fun `when playing game, should return answers as a stream`() {
         given(game.play(CountToNumber(5))).willReturn(answersFlux("1", "2", "Fizz", "4", "Buzz"))
 
         testClient
@@ -69,7 +69,7 @@ open class GameControllerIT {
     }
 
     @Test
-    fun `should return 422 Unprocessable Entity if Count To is less than 1`() {
+    fun `when playing game, should return 422 Unprocessable Entity if Count To is less than 1`() {
         testClient.get().uri("/game?countTo=0").accept(APPLICATION_STREAM_JSON).exchange()
             .expectStatus().isEqualTo(UNPROCESSABLE_ENTITY)
             .expectBody()
@@ -87,4 +87,45 @@ open class GameControllerIT {
                 )
             )
     }
+
+    @Test
+    fun `when requesting an answer for a single number, should return a stream of one answer`() {
+        // given game will return "Buzz Fizz?" for 15
+
+        testClient
+            .get().uri("/game/answers?numbers=15").accept(APPLICATION_STREAM_JSON).exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType("application/stream+json;charset=UTF-8")
+            .expectBodyList(Answer::class.java)
+            .hasSize(1)
+            .contains(*answers("Buzz Fizz?"))
+            .consumeWith<WebTestClient.ListBodySpec<Answer>>(
+                document(
+                    "get-single-answer",
+                    requestParameters(
+                        parameterWithName("numbers")
+                            .description("One or more numbers delimited by comma to get answers for")
+                    ),
+                    responseFields(
+                        fieldWithPath("value").description("Answer for a number")
+                    )
+                )
+            )
+
+    }
+
+    @Test
+    fun `when requesting answers for multiple numbers, should return a stream of as much answers as was requested`() {
+        // given game will return ["1", "Buzz", "Fizz", 10] for [1, 5, 3, 10]
+
+        testClient
+            .get().uri("/game/answers?numbers=1,5,3,10").accept(APPLICATION_STREAM_JSON).exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType("application/stream+json;charset=UTF-8")
+            .expectBodyList(Answer::class.java)
+            .hasSize(4)
+            .contains(*answers("1", "Buzz", "Fizz", "10"))
+            .consumeWith<WebTestClient.ListBodySpec<Answer>>(document("get-multiple-answers"))
+    }
+
 }
