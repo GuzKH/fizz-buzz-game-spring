@@ -1,0 +1,9 @@
+language: java
+dist: xenial
+jdk: openjdk8
+
+branches:
+  only:
+    - master
+
+script: mvn verify -B
