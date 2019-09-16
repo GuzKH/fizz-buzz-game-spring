@@ -6,8 +6,10 @@ branches:
   only:
     - master
 
-script: mvn verify -B
-
 cache:
   directories:
     - $HOME/.m2
+
+install: mvn dependency:resolve
+
+script: mvn verify -B
