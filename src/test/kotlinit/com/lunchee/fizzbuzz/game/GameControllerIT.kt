@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
-import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
-import org.springframework.http.MediaType.APPLICATION_STREAM_JSON
+import org.springframework.http.MediaType.*
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
 import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.restdocs.payload.PayloadDocumentation.*
@@ -41,7 +40,7 @@ open class GameControllerIT {
         testClient
             .get().uri("/game?countTo=5").accept(APPLICATION_STREAM_JSON).exchange()
             .expectStatus().isOk
-            .expectHeader().contentType("application/stream+json;charset=UTF-8")
+            .expectHeader().contentType("application/stream+json")
             .expectBodyList(Answer::class.java)
             .hasSize(5)
             .contains(*answers("1", "2", "Fizz", "4", "Buzz"))
@@ -84,7 +83,8 @@ open class GameControllerIT {
                         fieldWithPath("path").description("Requested Path"),
                         fieldWithPath("status").description("HTTP Response Status Value"),
                         fieldWithPath("error").description("HTTP Response Status Name"),
-                        fieldWithPath("message").description("Error Message")
+                        fieldWithPath("message").description("Error Message"),
+                        fieldWithPath("requestId").description("Request ID")
                     )
                 )
             )
@@ -95,9 +95,9 @@ open class GameControllerIT {
         every { game.getAnswer(42) } returns Answer("42")
 
         testClient
-            .get().uri("/game/answer/{number}", mapOf("number" to 42)).accept(APPLICATION_JSON_UTF8).exchange()
+            .get().uri("/game/answer/{number}", mapOf("number" to 42)).accept(APPLICATION_JSON).exchange()
             .expectStatus().isOk
-            .expectHeader().contentType(APPLICATION_JSON_UTF8)
+            .expectHeader().contentType(APPLICATION_JSON)
             .expectBody().jsonPath("$.value").isEqualTo("42")
             .consumeWith(
                 document(
