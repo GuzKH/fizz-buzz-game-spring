@@ -10,21 +10,26 @@ import kotlinx.coroutines.flow.toList
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
+import org.springframework.boot.test.autoconfigure.restdocs.RestDocsWebTestClientConfigurationCustomizer
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
-import org.springframework.http.MediaType.*
-import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
+import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.http.MediaType.APPLICATION_STREAM_JSON
 import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.restdocs.payload.PayloadDocumentation.*
 import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.restdocs.snippet.Attributes.key
 import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Flux
 
 @ExperimentalCoroutinesApi
 @WebFluxTest(controllers = [GameController::class])
 @AutoConfigureRestDocs
+@ContextConfiguration(classes = [GameControllerTestConfig::class])
 open class GameControllerIT {
 
     @MockkBean
@@ -77,7 +82,6 @@ open class GameControllerIT {
             .consumeWith(
                 document(
                     "game-start-illegal-count",
-                    preprocessResponse(prettyPrint()),
                     responseFields(
                         fieldWithPath("timestamp").description("Timestamp of an Error"),
                         fieldWithPath("path").description("Requested Path"),
@@ -144,4 +148,13 @@ open class GameControllerIT {
     }
 
     private val capturedNumbers = slot<Flow<Int>>()
+}
+
+@TestConfiguration
+class GameControllerTestConfig {
+
+    @Bean
+    fun restDocsConfiguration() = RestDocsWebTestClientConfigurationCustomizer { configurer ->
+        configurer.operationPreprocessors().withResponseDefaults(prettyPrint())
+    }
 }
